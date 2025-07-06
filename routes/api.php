@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KLKHFuelStationController;
+use App\Http\Controllers\UserDiketahuiController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -17,6 +18,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/klkh/fuel-station/{id}', [KLKHFuelStationController::class, 'update']);
     Route::delete('/klkh/fuel-station/{id}', [KLKHFuelStationController::class, 'destroy']);
 
-    // Tambahan route lain
-    // Route::get('/user', [UserController::class, 'me']);
+    //User Diketahui
+    Route::get('/users/diketahui', [UserDiketahuiController::class, 'index']);
 });
