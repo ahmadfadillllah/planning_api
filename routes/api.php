@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KLKHFuelStationController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\UserDiketahuiController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +22,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //User Diketahui
     Route::get('/users/diketahui', [UserDiketahuiController::class, 'index']);
+
+    //Area
+    Route::get('/area', [AreaController::class, 'index']);
+
+    //Shift
+    Route::get('/shift', [ShiftController::class, 'index']);
 });
