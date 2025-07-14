@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,10 +42,16 @@ class ActivityController extends Controller
         }
     }
 
-    public function all()
+    public function all(Request $request)
     {
-        $startDate = '2025-01-01 00:00';
-        $endDate = '2025-12-01 00:00';
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+
+        if (!$startDate || !$endDate) {
+            // Default ke hari ini jika tidak ada input
+            $startDate = Carbon::now()->toDateString();
+            $endDate = $startDate;
+        }
 
         try {
             $result = Activity::select(
