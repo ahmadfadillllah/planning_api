@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/klkh/fuel-station', [KLKHFuelStationController::class, 'index']);
     Route::put('/klkh/fuel-station/{id}', [KLKHFuelStationController::class, 'update']);
     Route::delete('/klkh/fuel-station/{id}', [KLKHFuelStationController::class, 'destroy']);
-    Route::get('/klkh/fuel-station/download/{id}', [KLKHFuelStationController::class, 'index']);
+    Route::get('/klkh/fuel-station/download/{id}', [KLKHFuelStationController::class, 'download']);
 
     //User Diketahui
     Route::get('/users/diketahui', [UserDiketahuiController::class, 'index']);

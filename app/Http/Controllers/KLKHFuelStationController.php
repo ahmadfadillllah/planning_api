@@ -213,9 +213,7 @@ class KLKHFuelStationController extends Controller
         ->leftJoin('users as us1', 'fs.PIC', '=', 'us1.nik')
         ->leftJoin('users as us2', 'fs.PENGAWAS', '=', 'us2.nik')
         ->leftJoin('users as us3', 'fs.DIKETAHUI', '=', 'us3.nik')
-        ->leftJoin('focus.dbo.PRS_PERSONAL as gl', 'fs.foreman', '=', 'gl.NRP')
-        ->leftJoin('focus.dbo.PRS_PERSONAL as spv', 'fs.supervisor', '=', 'spv.NRP')
-        ->leftJoin('focus.dbo.PRS_PERSONAL as spt', 'fs.superintendent', '=', 'spt.NRP')
+
         ->select(
             'fs.*',
             'ar.KETERANGAN as PIT',
