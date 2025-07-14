@@ -19,18 +19,13 @@ class KLKHFuelStationController extends Controller
     public function index(Request $request)
     {
         try {
-            $tanggalInput = $request->input('rangeDate');
+            $startDate = $request->input('startDate');
+            $endDate = $request->input('endDate');
 
-            $startDate = Carbon::now()->toDateString();
-            $endDate = $startDate;
-
-            if ($tanggalInput) {
-                if (str_contains($tanggalInput, 'to')) {
-                    [$startDate, $endDate] = array_map('trim', explode('to', $tanggalInput));
-                } else {
-                    $startDate = trim($tanggalInput);
-                    $endDate = $startDate;
-                }
+            if (!$startDate || !$endDate) {
+                // Default ke hari ini jika tidak ada input
+                $startDate = Carbon::now()->toDateString();
+                $endDate = $startDate;
             }
 
             $user = Auth::user();
