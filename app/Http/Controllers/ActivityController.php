@@ -44,14 +44,13 @@ class ActivityController extends Controller
 
     public function all(Request $request)
     {
-        $startDate = $request->input('startDate');
-        $endDate = $request->input('endDate');
+        $bulan = $request->input('bulan');
 
-        if (!$startDate || !$endDate) {
-            // Default ke hari ini jika tidak ada input
-            $startDate = Carbon::now()->toDateString();
-            $endDate = $startDate;
+        if (!$bulan) {
+            $bulan = Carbon::now()->month;
         }
+
+        $tahun = Carbon::now()->year;
 
         try {
             $result = Activity::select(
@@ -65,7 +64,8 @@ class ActivityController extends Controller
                 )
                 ->where('STATUSENABLED', true)
                 ->where('NIK', Auth::user()->nik)
-                ->whereBetween('TANGGAL', [$startDate, $endDate])
+                ->whereMonth('TANGGAL', $bulan)
+                ->whereYear('TANGGAL', $tahun)
                 ->get();
 
             return response()->json([
