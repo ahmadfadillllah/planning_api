@@ -111,6 +111,19 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
+        'sims' => [
+            'driver'   => 'sqlsrv',
+            'host'     => '10.72.5.80',
+            'port'     => env('DB_PORT', '1433'),
+            'database' => 'db_payroll',
+            'username' => 'sims',
+            'password' => 'sims!234%',
+            'charset'  => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
+            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
 
     ],
 

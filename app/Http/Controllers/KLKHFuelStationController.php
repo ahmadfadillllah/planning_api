@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
+use Barryvdh\DomPDF\Facade\Pdf;
+use DateTime;
+use Illuminate\Support\Facades\File;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class KLKHFuelStationController extends Controller
 {
@@ -204,5 +208,65 @@ class KLKHFuelStationController extends Controller
                 'error' => $th->getMessage(),
             ], 500);
         }
+    }
+
+    public function download($id)
+    {
+        $fs = DB::table('KLKH_FUEL_STATION as fs')
+        ->leftJoin('users as us', 'fs.pic', '=', 'us.id')
+        ->leftJoin('REF_AREA as ar', 'fs.pit_id', '=', 'ar.id')
+        ->leftJoin('REF_SHIFT as sh', 'fs.shift_id', '=', 'sh.id')
+        ->leftJoin('users as us1', 'fs.PIC', '=', 'us1.nik')
+        ->leftJoin('users as us2', 'fs.PENGAWAS', '=', 'us2.nik')
+        ->leftJoin('users as us3', 'fs.DIKETAHUI', '=', 'us3.nik')
+        ->leftJoin('focus.dbo.PRS_PERSONAL as gl', 'fs.foreman', '=', 'gl.NRP')
+        ->leftJoin('focus.dbo.PRS_PERSONAL as spv', 'fs.supervisor', '=', 'spv.NRP')
+        ->leftJoin('focus.dbo.PRS_PERSONAL as spt', 'fs.superintendent', '=', 'spt.NRP')
+        ->select(
+            'fs.*',
+            'ar.KETERANGAN as PIT',
+            'sh.KETERANAN as SHIFT',
+            'us1.name as NAMA_PIC',
+            'us2.name as NAMA_PENGAWAS',
+            'us3.name as NAMA_DIKETAHUI',
+            )
+        ->where('fs.STATUSENABLED', true)
+        ->where('fs.ID', $id)->first();
+
+        if($fs == null){
+            return redirect()->back()->with('info', 'Maaf, data tidak ditemukan');
+        }else {
+            $item = $fs;
+
+            $qrTempFolder = storage_path('app/qr-temp');
+            if (!File::exists($qrTempFolder)) {
+                File::makeDirectory($qrTempFolder, 0755, true);
+            }
+
+            if($item->VERIFIED_PENGAWAS != null){
+                $fileName = 'VERIFIED_PENGAWAS' . $item->uuid . '.png';
+                $filePath = $qrTempFolder . DIRECTORY_SEPARATOR . $fileName;
+
+                QrCode::size(150)->format('png')->generate(route('verified.index', ['encodedNik' => base64_encode($item->VERIFIED_PENGAWAS)]), $filePath);
+                $item->VERIFIED_PENGAWAS = $filePath;
+            }else{
+                $item->VERIFIED_PENGAWAS == null;
+            }
+
+            if($item->VERIFIED_DIKETAHUI != null){
+                $fileName = 'VERIFIED_DIKETAHUI' . $item->uuid . '.png';
+                $filePath = $qrTempFolder . DIRECTORY_SEPARATOR . $fileName;
+
+                QrCode::size(150)->format('png')->generate(route('verified.index', ['encodedNik' => base64_encode($item->VERIFIED_DIKETAHUI)]), $filePath);
+                $item->VERIFIED_DIKETAHUI = $filePath;
+            }else{
+                $item->VERIFIED_DIKETAHUI == null;
+            }
+
+
+        }
+
+        $pdf = PDF::loadView('klkh.fuelStation.download', compact('fs'));
+        return $pdf->download('KLKH FUEL STATION-'. $fs->DATE .'-'. $fs->SHIFT .'-'. $fs->NAMA_PIC .'.pdf');
     }
 }
