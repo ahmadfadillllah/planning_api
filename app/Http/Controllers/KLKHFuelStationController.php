@@ -208,7 +208,6 @@ class KLKHFuelStationController extends Controller
     public function download($id)
     {
         $fs = DB::table('KLKH_FUEL_STATION as fs')
-        ->leftJoin('users as us', 'fs.pic', '=', 'us.id')
         ->leftJoin('REF_AREA as ar', 'fs.pit_id', '=', 'ar.id')
         ->leftJoin('REF_SHIFT as sh', 'fs.shift_id', '=', 'sh.id')
         ->leftJoin('users as us1', 'fs.PIC', '=', 'us1.nik')
@@ -220,7 +219,7 @@ class KLKHFuelStationController extends Controller
         ->select(
             'fs.*',
             'ar.KETERANGAN as PIT',
-            'sh.KETERANAN as SHIFT',
+            'sh.KETERANGAN as SHIFT',
             'us1.name as NAMA_PIC',
             'us2.name as NAMA_PENGAWAS',
             'us3.name as NAMA_DIKETAHUI',
@@ -262,6 +261,6 @@ class KLKHFuelStationController extends Controller
         }
 
         $pdf = PDF::loadView('klkh.fuelStation.download', compact('fs'));
-        return $pdf->download('KLKH FUEL STATION-'. $fs->DATE .'-'. $fs->SHIFT .'-'. $fs->NAMA_PIC .'.pdf');
+        return $pdf->download('KLKH FUEL STATION.pdf');
     }
 }
