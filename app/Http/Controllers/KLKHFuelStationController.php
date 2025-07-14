@@ -69,11 +69,11 @@ class KLKHFuelStationController extends Controller
                 ->whereBetween(DB::raw('CONVERT(varchar, fs.DATE, 23)'), [$startDate, $endDate]);
 
             // 🔐 Filter berdasarkan role user login
-            $fuelStation->where(function ($query) use ($nik) {
-                $query->where('fs.PIC', $nik)
-                    ->orWhere('fs.PENGAWAS', $nik)
-                    ->orWhere('fs.DIKETAHUI', $nik);
-            });
+            // $fuelStation->where(function ($query) use ($nik) {
+            //     $query->where('fs.PIC', $nik)
+            //         ->orWhere('fs.PENGAWAS', $nik)
+            //         ->orWhere('fs.DIKETAHUI', $nik);
+            // });
 
             $result = $fuelStation->get();
 
