@@ -58,7 +58,7 @@ class KLKHFuelStationController extends Controller
                     'fs.CATATAN_VERIFIED_DIKETAHUI as CATATAN_VERIFIED_DIKETAHUI',
                     'us3.name as NAMA_DIKETAHUI',
                     'fs.DATE',
-                    'fs.TIME',
+                    DB::raw("CONVERT(VARCHAR(5), fs.TIME, 108) as TIME"),
                 )
                 ->where('fs.STATUSENABLED', true)
                 ->whereBetween(DB::raw('CONVERT(varchar, fs.DATE, 23)'), [$startDate, $endDate]);
