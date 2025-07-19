@@ -208,28 +208,28 @@ class KLKHFuelStationController extends Controller
 
     public function download($id)
     {
-        $fs = DB::table('KLKH_FUEL_STATION as fs')
-        ->leftJoin('REF_AREA as ar', 'fs.pit_id', '=', 'ar.id')
-        ->leftJoin('REF_SHIFT as sh', 'fs.shift_id', '=', 'sh.id')
+        $fuelStation = DB::table('KLKH_FUEL_STATION as fs')
         ->leftJoin('users as us1', 'fs.PIC', '=', 'us1.nik')
+
+        ->leftJoin('REF_AREA as ar', 'fs.PIT_ID', '=', 'ar.id')
+        ->leftJoin('REF_SHIFT as sh', 'fs.SHIFT_ID', '=', 'sh.id')
         ->leftJoin('users as us2', 'fs.PENGAWAS', '=', 'us2.nik')
         ->leftJoin('users as us3', 'fs.DIKETAHUI', '=', 'us3.nik')
-
         ->select(
             'fs.*',
+            'fs.STATUSENABLED',
             'ar.KETERANGAN as PIT',
             'sh.KETERANGAN as SHIFT',
-            'us1.name as NAMA_PIC',
             'us2.name as NAMA_PENGAWAS',
             'us3.name as NAMA_DIKETAHUI',
-            )
+        )
         ->where('fs.STATUSENABLED', true)
         ->where('fs.ID', $id)->first();
 
-        if($fs == null){
+        if($fuelStation == null){
             return redirect()->back()->with('info', 'Maaf, data tidak ditemukan');
         }else {
-            $item = $fs;
+            $item = $fuelStation;
 
             $qrTempFolder = storage_path('app/qr-temp');
             if (!File::exists($qrTempFolder)) {
@@ -237,7 +237,7 @@ class KLKHFuelStationController extends Controller
             }
 
             if($item->VERIFIED_PENGAWAS != null){
-                $fileName = 'VERIFIED_PENGAWAS' . $item->uuid . '.png';
+                $fileName = 'VERIFIED_PENGAWAS' . $item->UUID . '.png';
                 $filePath = $qrTempFolder . DIRECTORY_SEPARATOR . $fileName;
 
                 QrCode::size(150)->format('png')->generate(route('verified.index', ['encodedNik' => base64_encode($item->VERIFIED_PENGAWAS)]), $filePath);
@@ -247,7 +247,7 @@ class KLKHFuelStationController extends Controller
             }
 
             if($item->VERIFIED_DIKETAHUI != null){
-                $fileName = 'VERIFIED_DIKETAHUI' . $item->uuid . '.png';
+                $fileName = 'VERIFIED_DIKETAHUI' . $item->UUID . '.png';
                 $filePath = $qrTempFolder . DIRECTORY_SEPARATOR . $fileName;
 
                 QrCode::size(150)->format('png')->generate(route('verified.index', ['encodedNik' => base64_encode($item->VERIFIED_DIKETAHUI)]), $filePath);
@@ -256,10 +256,11 @@ class KLKHFuelStationController extends Controller
                 $item->VERIFIED_DIKETAHUI == null;
             }
 
-
         }
 
-        $pdf = PDF::loadView('klkh.fuelStation.download', compact('fs'));
-        return $pdf->download('KLKH FUEL STATION.pdf');
+        // return view('klkh.fuelStation.download', compact('fuelStation'));
+
+        $pdf = PDF::loadView('klkh.fuelStation.download', compact('fuelStation'));
+        return $pdf->download('KLKH Fuel Station.pdf');
     }
 }
