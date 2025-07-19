@@ -87,6 +87,68 @@ class KLKHFuelStationController extends Controller
         }
     }
 
+    public function preview($id)
+    {
+        try {
+            $fuelStation = DB::table('KLKH_FUEL_STATION as fs')
+                ->leftJoin('users as us1', 'fs.PIC', '=', 'us1.nik')
+                ->leftJoin('REF_AREA as ar', 'fs.PIT_ID', '=', 'ar.id')
+                ->leftJoin('REF_SHIFT as sh', 'fs.SHIFT_ID', '=', 'sh.id')
+                ->leftJoin('users as us2', 'fs.PENGAWAS', '=', 'us2.nik')
+                ->leftJoin('users as us3', 'fs.DIKETAHUI', '=', 'us3.nik')
+                ->select(
+                    'fs.*',
+                    'ar.KETERANGAN as PIT',
+                    'sh.KETERANGAN as SHIFT',
+                    'us1.name as NAMA_PIC',
+                    'us2.name as NAMA_PENGAWAS',
+                    'us3.name as NAMA_DIKETAHUI',
+                )
+                ->where('fs.statusenabled', true)
+                ->where('fs.id', $id)
+                ->first();
+
+            if ($fuelStation == null) {
+                return redirect()->back()->with('info', 'Maaf, data tidak ditemukan');
+            } else {
+                $item = $fuelStation;
+
+                $qrTempFolder = storage_path('app/public/qr-temp');
+                if (!File::exists($qrTempFolder)) {
+                    File::makeDirectory($qrTempFolder, 0755, true);
+                }
+
+                if ($item->VERIFIED_PENGAWAS != null) {
+                    $qrContent = 'http://planning.ptsims.co.id/verified/' . base64_encode($item->VERIFIED_PENGAWAS);
+                    $qrImage = base64_encode(QrCode::format('png')->size(150)->generate($qrContent));
+                    $item->VERIFIED_PENGAWAS = 'data:image/png;base64,' . $qrImage;
+                } else {
+                    $item->VERIFIED_PENGAWAS = null;
+                }
+
+                if ($item->VERIFIED_DIKETAHUI != null) {
+                    $qrContent = 'http://planning.ptsims.co.id/verified/' . base64_encode($item->VERIFIED_DIKETAHUI);
+                    $qrImage = base64_encode(QrCode::format('png')->size(150)->generate($qrContent));
+                    $item->VERIFIED_DIKETAHUI = 'data:image/png;base64,' . $qrImage;
+                } else {
+                    $item->VERIFIED_DIKETAHUI = null;
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $item,
+                ], 200);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal mengambil data Fuel Station.',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+
 
     public function store(Request $request)
     {
