@@ -42,7 +42,7 @@
     <table class="point-table">
         <thead>
             <tr>
-                <th class="noborder nobg" style="padding:0;"><img src="{!! public_path('app/assets/images/sims1.png') !!}" width="240px"></th>
+                <th class="noborder nobg" style="padding:0;"><img src="{!! public_path('sims1.png') !!}" width="240px"></th>
                 <th class="noborder nobg right" colspan="5"><p style="margin:0;">FM-PLA-28/01/03/06/25</p></th>
             </tr>
             <tr>
