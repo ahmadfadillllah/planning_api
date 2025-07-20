@@ -217,7 +217,7 @@ class KLKHFuelStationController extends Controller
                 'DIKETAHUI' => $data['DIKETAHUI'] ?? null,
             ];
 
-            if (Auth::user()->role == 'FOREMAN' || Auth::user()->role == 'SUPERVISOR') {
+            if (Auth::user()->role == 'JUNIOR FOREMAN' || Auth::user()->role == 'FOREMAN' || Auth::user()->role == 'JUNIOR STAFF' || Auth::user()->role == 'STAFF' || Auth::user()->role == 'SUPERVISOR') {
                 $dataToInsert['PENGAWAS'] = Auth::user()->nik;
                 $dataToInsert['VERIFIED_DATETIME_PENGAWAS'] = Carbon::now();
                 $dataToInsert['VERIFIED_PENGAWAS'] = Auth::user()->nik;
@@ -324,5 +324,85 @@ class KLKHFuelStationController extends Controller
 
         $pdf = PDF::loadView('klkh.fuelStation.download', compact('fuelStation'));
         return $pdf->download('KLKH Fuel Station.pdf');
+    }
+
+    public function verifiedAll(Request $request, $id)
+    {
+        $klkh =  KLKHFuelStation::where('ID', $id)->first();
+        try {
+            KLKHFuelStation::where('ID', $klkh->ID)->update([
+                'VERIFIED_PENGAWAS' => $klkh->PENGAWAS,
+                'VERIFIED_DATETIME_PENGAWAS' => Carbon::now(),
+                'VERIFIED_DIKETAHUI' => $klkh->DIKETAHUI,
+                'VERIFIED_DATETIME_DIKETAHUI' => Carbon::now(),
+                'UPDATED_BY' => Auth::user()->id,
+                // 'CATATAN_VERIFIED_PENGAWAS' => $request->CATATAN_VERIFIED_ALL,
+                // 'CATATAN_VERIFIED_DIKETAHUI' => $request->CATATAN_VERIFIED_ALL,
+            ]);
+
+            return response()->json([
+                    'status' => 'success',
+                    'message' => 'KLKH Fuel Station berhasil diverifikasi',
+                ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan saat verifikasi data.',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+
+    }
+
+    public function verifiedPengawas(Request $request, $id)
+    {
+
+        $klkh =  KLKHFuelStation::where('ID', $id)->first();
+        try {
+            KLKHFuelStation::where('ID', $klkh->ID)->update([
+                'VERIFIED_PENGAWAS' => (string)Auth::user()->nik,
+                'VERIFIED_DATETIME_PENGAWAS' => Carbon::now(),
+                'UPDATED_BY' => Auth::user()->id,
+            ]);
+
+            return response()->json([
+                    'status' => 'success',
+                    'message' => 'KLKH Fuel Station berhasil diverifikasi',
+                ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan saat verifikasi data.',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+
+    }
+
+    public function verifiedDiketahui(Request $request, $id)
+    {
+
+        $klkh =  KLKHFuelStation::where('ID', $id)->first();
+        try {
+            KLKHFuelStation::where('ID', $klkh->ID)->update([
+                'VERIFIED_DIKETAHUI' => (string)Auth::user()->nik,
+                'VERIFIED_DATETIME_DIKETAHUI' => Carbon::now(),
+                'UPDATED_BY' => Auth::user()->id,
+            ]);
+
+            return response()->json([
+                    'status' => 'success',
+                    'message' => 'KLKH Fuel Station berhasil diverifikasi',
+                ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan saat verifikasi data.',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
     }
 }

@@ -24,6 +24,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/klkh/fuel-station/{id}', [KLKHFuelStationController::class, 'destroy']);
     Route::get('/klkh/fuel-station/preview/{id}', [KLKHFuelStationController::class, 'preview']);
     Route::get('/klkh/fuel-station/download/{id}', [KLKHFuelStationController::class, 'download']);
+    Route::get('/klkh/fuel-station/verified/all/{id}', [KLKHFuelStationController::class, 'verifiedAll']);
+    Route::get('/klkh/fuel-station/verified/pengawas/{id}', [KLKHFuelStationController::class, 'verifiedPengawas']);
+    Route::get('/klkh/fuel-station/verified/diketahui/{id}', [KLKHFuelStationController::class, 'verifiedDiketahui']);
 
     //User Diketahui
     Route::get('/users/diketahui', [UserDiketahuiController::class, 'index']);
