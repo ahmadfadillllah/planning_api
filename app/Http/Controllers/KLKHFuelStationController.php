@@ -304,7 +304,7 @@ class KLKHFuelStationController extends Controller
             $filePath = $qrTempFolder . DIRECTORY_SEPARATOR . $fileName;
 
             QrCode::size(150)->format('png')->generate(
-                route('verified.index', ['encodedNik' => base64_encode($item->VERIFIED_PENGAWAS)]),
+                'http://planner.ptsims.co.id/verified/' . base64_encode($item->VERIFIED_PENGAWAS),
                 $filePath
             );
 
@@ -318,7 +318,7 @@ class KLKHFuelStationController extends Controller
             $filePath = $qrTempFolder . DIRECTORY_SEPARATOR . $fileName;
 
             QrCode::size(150)->format('png')->generate(
-                route('verified.index', ['encodedNik' => base64_encode($item->VERIFIED_DIKETAHUI)]),
+                'http://planner.ptsims.co.id/verified/' . base64_encode($item->VERIFIED_DIKETAHUI),
                 $filePath
             );
 
