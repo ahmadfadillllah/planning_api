@@ -311,8 +311,8 @@
             <td class="noborder nobg" style="text-align: center">Diketahui</td>
         </tr>
         <tr>
-            <td class="noborder">@if ($fuelStation->VERIFIED_PENGAWAS != null)<img src="{!! $fuelStation->VERIFIED_PENGAWAS !!}" style="max-width: 70px;">@endif</td>
-            <td class="noborder nobg" style="text-align: center">@if ($fuelStation->VERIFIED_DIKETAHUI != null)<img src="{!! $fuelStation->VERIFIED_DIKETAHUI !!}" style="max-width: 70px;">@endif</td>
+            <td class="noborder">@if ($fuelStation->VERIFIED_PENGAWAS != null)<img src="{!! $fuelStation->QR_PENGAWAS !!}" style="max-width: 70px;">@endif</td>
+            <td class="noborder nobg" style="text-align: center">@if ($fuelStation->VERIFIED_DIKETAHUI != null)<img src="{!! $fuelStation->QR_DIKETAHUI !!}" style="max-width: 70px;">@endif</td>
         </tr>
         <tr>
             <td class="noborder">{!! $fuelStation->NAMA_PENGAWAS !!}</td>

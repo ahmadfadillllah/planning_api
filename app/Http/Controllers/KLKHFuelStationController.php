@@ -308,9 +308,9 @@ class KLKHFuelStationController extends Controller
                 $filePath
             );
 
-            $item->VERIFIED_PENGAWAS = asset('qr-temp/' . $fileName); // <-- gunakan asset URL
+            $item->QR_PENGAWAS = asset('qr-temp/' . $fileName); // <-- gunakan asset URL
         } else {
-            $item->VERIFIED_PENGAWAS = null;
+            $item->QR_PENGAWAS = null;
         }
 
         if ($item->VERIFIED_DIKETAHUI != null) {
@@ -322,9 +322,9 @@ class KLKHFuelStationController extends Controller
                 $filePath
             );
 
-            $item->VERIFIED_DIKETAHUI = asset('qr-temp/' . $fileName); // <-- gunakan asset URL
+            $item->QR_DIKETAHUI = asset('qr-temp/' . $fileName); // <-- gunakan asset URL
         } else {
-            $item->VERIFIED_DIKETAHUI = null;
+            $item->QR_DIKETAHUI = null;
         }
 
         // kirim objek ke PDF
