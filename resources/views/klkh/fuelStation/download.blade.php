@@ -311,8 +311,16 @@
             <td class="noborder nobg" style="text-align: center">Diketahui</td>
         </tr>
         <tr>
-            <td class="noborder">@if ($fuelStation->VERIFIED_PENGAWAS != null)<img src="{!! $fuelStation->QR_PENGAWAS !!}" style="max-width: 70px;">@endif</td>
-            <td class="noborder nobg" style="text-align: center">@if ($fuelStation->VERIFIED_DIKETAHUI != null)<img src="{!! $fuelStation->QR_DIKETAHUI !!}" style="max-width: 70px;">@endif</td>
+            <td class="noborder">
+                @if ($fuelStation->QR_PENGAWAS_PATH)
+                    <img src="{{ $fuelStation->QR_PENGAWAS_PATH }}" style="max-width: 70px;">
+                @endif
+            </td>
+            <td class="noborder nobg" style="text-align: center">
+                @if ($fuelStation->QR_DIKETAHUI_PATH)
+                    <img src="{{ $fuelStation->QR_DIKETAHUI_PATH }}" style="max-width: 70px;">
+                @endif
+            </td>
         </tr>
         <tr>
             <td class="noborder">{!! $fuelStation->NAMA_PENGAWAS !!}</td>
