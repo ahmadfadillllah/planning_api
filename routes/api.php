@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/klkh/fuel-station/download/{id}', [KLKHFuelStationController::class, 'download']);
 
 Route::middleware('auth:sanctum')->group(function () {
     //Auth logout
@@ -23,7 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/klkh/fuel-station/{id}', [KLKHFuelStationController::class, 'update']);
     Route::delete('/klkh/fuel-station/{id}', [KLKHFuelStationController::class, 'destroy']);
     Route::get('/klkh/fuel-station/preview/{id}', [KLKHFuelStationController::class, 'preview']);
-    Route::get('/klkh/fuel-station/download/{id}', [KLKHFuelStationController::class, 'download']);
+
     Route::get('/klkh/fuel-station/verified/all/{id}', [KLKHFuelStationController::class, 'verifiedAll']);
     Route::get('/klkh/fuel-station/verified/pengawas/{id}', [KLKHFuelStationController::class, 'verifiedPengawas']);
     Route::get('/klkh/fuel-station/verified/diketahui/{id}', [KLKHFuelStationController::class, 'verifiedDiketahui']);
