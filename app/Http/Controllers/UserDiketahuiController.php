@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserDiketahuiController extends Controller
 {
@@ -11,19 +12,16 @@ class UserDiketahuiController extends Controller
     public function index()
     {
         try {
-            $result = User::whereIn('role', [
-                'SUPERINTENDENT',
-                'PJS. SUPERINTENDENT',
-                'SUPERVISOR',
-                'STAFF'
-            ])
+
+            $result = DB::table('CONF_MAPPING_VERIFIER as mf')
+            ->leftJoin('users as us', 'mf.USER_ID', 'us.id')
             ->select(
-                'nik as NIK',
-                'name as NAMA',
-                'role as ROLE'
-            )
-            ->where('statusenabled', true)
-            ->get();
+                'mf.STATUSENABLED',
+                'mf.id as ID',
+                'us.nik as NIK',
+                'us.name as NAME',
+                'us.role as ROLE'
+            )->where('mf.STATUSENABLED', true)->get();
 
             return response()->json([
                 'status' => 'success',

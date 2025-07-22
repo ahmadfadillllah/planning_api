@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use App\Models\KLKHFuelStation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -225,6 +226,15 @@ class KLKHFuelStationController extends Controller
 
             KLKHFuelStation::create($dataToInsert);
 
+            Activity::create([
+                'STATUSENABLED' => true,
+                'TANGGAL' => Carbon::now(),
+                'JENIS' => 'KLKH',
+                'NAMA' => Auth::user()->name,
+                'NIK' => Auth::user()->nik,
+                'KETERANGAN' => 'Telah menambahkan KLKH Fuel Station',
+            ]);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'KLKH Fuel Station berhasil dibuat',
@@ -396,6 +406,15 @@ class KLKHFuelStationController extends Controller
                 'VERIFIED_DIKETAHUI' => (string)Auth::user()->nik,
                 'VERIFIED_DATETIME_DIKETAHUI' => Carbon::now(),
                 'UPDATED_BY' => Auth::user()->id,
+            ]);
+
+            Activity::create([
+                'STATUSENABLED' => true,
+                'TANGGAL' => Carbon::now(),
+                'JENIS' => 'KLKH',
+                'NAMA' => Auth::user()->name,
+                'NIK' => Auth::user()->nik,
+                'KETERANGAN' => 'Telah memverifikasi KLKH Fuel Station',
             ]);
 
             return response()->json([
