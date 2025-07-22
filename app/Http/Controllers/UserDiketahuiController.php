@@ -19,7 +19,7 @@ class UserDiketahuiController extends Controller
                 'mf.STATUSENABLED',
                 'mf.id as ID',
                 'us.nik as NIK',
-                'us.name as NAME',
+                'us.name as NAMA',
                 'us.role as ROLE'
             )->where('mf.STATUSENABLED', true)->get();
 
