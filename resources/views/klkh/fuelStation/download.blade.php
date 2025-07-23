@@ -299,6 +299,11 @@
         </tr>
 
     </table>
+    <table>
+        <tr><th class="noborder nobg" colspan="10"></th></tr>
+        <tr><th class="noborder nobg" colspan="10">Catatan:</th></tr>
+        <tr><td class="noborder nobg left" colspan="10">@if($fuelStation->ADDITIONAL_NOTES != null) {{ $fuelStation->ADDITIONAL_NOTES }} @endif</td></tr>
+    </table>
 
     <!-- Bagian tanda tangan -->
     <table>
