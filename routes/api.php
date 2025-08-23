@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+//Banner
+Route::get('/banner', [BannerController::class, 'index']);
+
+//Area
+Route::get('/area', [AreaController::class, 'index']);
+
+//Shift
+Route::get('/shift', [ShiftController::class, 'index']);
+
 Route::middleware('auth:sanctum')->group(function () {
     //Auth logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -34,14 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //Absensi
     Route::get('/absensi', [AbsensiController::class, 'index']);
 
-    //Banner
-    Route::get('/banner', [BannerController::class, 'index']);
 
-    //Area
-    Route::get('/area', [AreaController::class, 'index']);
-
-    //Shift
-    Route::get('/shift', [ShiftController::class, 'index']);
 
     //Activity
     Route::get('/activity/summary', [ActivityController::class, 'summary']);
