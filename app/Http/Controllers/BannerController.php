@@ -11,9 +11,9 @@ class BannerController extends Controller
     {
         try {
             $banners = collect([
-                'Frame 1.jpg',
-                'Frame 2.jpg',
-                'Frame 3.jpg',
+                'Frame 4.jpg',
+                'Frame 5.jpg',
+                'Frame 6.jpg',
             ])->map(function ($filename) {
                 return [
                     'filename' => $filename,
