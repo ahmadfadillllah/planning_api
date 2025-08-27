@@ -279,13 +279,16 @@ class KLKHFuelStationController extends Controller
                 'APD_STANDAR_NOTE' => $data['APD_STANDAR_NOTE'] ?? null,
                 'ADDITIONAL_NOTES' => $data['ADDITIONAL_NOTES'] ?? null,
                 'DIKETAHUI' => $data['DIKETAHUI'] ?? null,
+                'PENGAWAS' => Auth::user()->nik,
+                'VERIFIED_DATETIME_PENGAWAS' => Carbon::now(),
+                'VERIFIED_PENGAWAS' => Auth::user()->nik,
             ];
 
-            if (Auth::user()->role == 'JUNIOR FOREMAN' || Auth::user()->role == 'FOREMAN' || Auth::user()->role == 'JUNIOR STAFF' || Auth::user()->role == 'STAFF' || Auth::user()->role == 'SUPERVISOR') {
-                $dataToInsert['PENGAWAS'] = Auth::user()->nik;
-                $dataToInsert['VERIFIED_DATETIME_PENGAWAS'] = Carbon::now();
-                $dataToInsert['VERIFIED_PENGAWAS'] = Auth::user()->nik;
-            }
+            // if (Auth::user()->role == 'JUNIOR FOREMAN' || Auth::user()->role == 'FOREMAN' || Auth::user()->role == 'JUNIOR STAFF' || Auth::user()->role == 'STAFF' || Auth::user()->role == 'SUPERVISOR') {
+            //     $dataToInsert['PENGAWAS'] = Auth::user()->nik;
+            //     $dataToInsert['VERIFIED_DATETIME_PENGAWAS'] = Carbon::now();
+            //     $dataToInsert['VERIFIED_PENGAWAS'] = Auth::user()->nik;
+            // }
 
             KLKHFuelStation::create($dataToInsert);
 
@@ -307,6 +310,106 @@ class KLKHFuelStationController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal membuat KLKH Fuel Station',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $data = $request->all();
+
+            $dataToUpdate = [
+                'PIC' => Auth::user()->nik,
+                'STATUSENABLED' => true,
+                'PIT_ID' => $data['PIT'],
+                'SHIFT_ID' => $data['SHIFT'],
+                'DATE' => $data['DATE'],
+                'TIME' => $data['TIME'],
+                'PERMUKAAN_TANAH_RATA_CHECK' => $data['PERMUKAAN_TANAH_RATA_CHECK'],
+                'PERMUKAAN_TANAH_RATA_NOTE' => $data['PERMUKAAN_TANAH_RATA_NOTE'] ?? null,
+                'PERMUKAAN_TANAH_LICIN_CHECK' => $data['PERMUKAAN_TANAH_LICIN_CHECK'],
+                'PERMUKAAN_TANAH_LICIN_NOTE' => $data['PERMUKAAN_TANAH_LICIN_NOTE'] ?? null,
+                'LOKASI_JAUH_LINTASAN_CHECK' => $data['LOKASI_JAUH_LINTASAN_CHECK'],
+                'LOKASI_JAUH_LINTASAN_NOTE' => $data['LOKASI_JAUH_LINTASAN_NOTE'] ?? null,
+                'TIDAK_CECERAN_B3_CHECK' => $data['TIDAK_CECERAN_B3_CHECK'],
+                'TIDAK_CECERAN_B3_NOTE' => $data['TIDAK_CECERAN_B3_NOTE'] ?? null,
+                'PARKIR_FUELTRUCK_CHECK' => $data['PARKIR_FUELTRUCK_CHECK'],
+                'PARKIR_FUELTRUCK_NOTE' => $data['PARKIR_FUELTRUCK_NOTE'] ?? null,
+                'PARKIR_LV_CHECK' => $data['PARKIR_LV_CHECK'],
+                'PARKIR_LV_NOTE' => $data['PARKIR_LV_NOTE'] ?? null,
+                'LAMPU_KERJA_CHECK' => $data['LAMPU_KERJA_CHECK'],
+                'LAMPU_KERJA_NOTE' => $data['LAMPU_KERJA_NOTE'] ?? null,
+                'FUEL_GENSET_CHECK' => $data['FUEL_GENSET_CHECK'],
+                'FUEL_GENSET_NOTE' => $data['FUEL_GENSET_NOTE'] ?? null,
+                'AIR_BERSIH_TANDON_CHECK' => $data['AIR_BERSIH_TANDON_CHECK'],
+                'AIR_BERSIH_TANDON_NOTE' => $data['AIR_BERSIH_TANDON_NOTE'] ?? null,
+                'SOP_JSA_CHECK' => $data['SOP_JSA_CHECK'],
+                'SOP_JSA_NOTE' => $data['SOP_JSA_NOTE'] ?? null,
+                'SAFETY_POST_CHECK' => $data['SAFETY_POST_CHECK'],
+                'SAFETY_POST_NOTE' => $data['SAFETY_POST_NOTE'] ?? null,
+                'RAMBU_APD_CHECK' => $data['RAMBU_APD_CHECK'],
+                'RAMBU_APD_NOTE' => $data['RAMBU_APD_NOTE'] ?? null,
+                'PERLENGKAPAN_KERJA_CHECK' => $data['PERLENGKAPAN_KERJA_CHECK'],
+                'PERLENGKAPAN_KERJA_NOTE' => $data['PERLENGKAPAN_KERJA_NOTE'] ?? null,
+                'APAB_APAR_CHECK' => $data['APAB_APAR_CHECK'],
+                'APAB_APAR_NOTE' => $data['APAB_APAR_NOTE'] ?? null,
+                'P3K_EYEWASH_CHECK' => $data['P3K_EYEWASH_CHECK'],
+                'P3K_EYEWASH_NOTE' => $data['P3K_EYEWASH_NOTE'] ?? null,
+                'INSPEKSI_APAR_CHECK' => $data['INSPEKSI_APAR_CHECK'],
+                'INSPEKSI_APAR_NOTE' => $data['INSPEKSI_APAR_NOTE'] ?? null,
+                'FORM_CHECKLIST_REFUELING_CHECK' => $data['FORM_CHECKLIST_REFUELING_CHECK'],
+                'FORM_CHECKLIST_REFUELING_NOTE' => $data['FORM_CHECKLIST_REFUELING_NOTE'] ?? null,
+                'TEMPAT_SAMPAH_CHECK' => $data['TEMPAT_SAMPAH_CHECK'],
+                'TEMPAT_SAMPAH_NOTE' => $data['TEMPAT_SAMPAH_NOTE'] ?? null,
+                'MINEPERMIT_CHECK' => $data['MINEPERMIT_CHECK'],
+                'MINEPERMIT_NOTE' => $data['MINEPERMIT_NOTE'] ?? null,
+                'SIMPER_OPERATOR_CHECK' => $data['SIMPER_OPERATOR_CHECK'],
+                'SIMPER_OPERATOR_NOTE' => $data['SIMPER_OPERATOR_NOTE'] ?? null,
+                'PADLOCK_CHECK' => $data['PADLOCK_CHECK'],
+                'PADLOCK_NOTE' => $data['PADLOCK_NOTE'] ?? null,
+                'WADAH_PENAMPUNG_CHECK' => $data['WADAH_PENAMPUNG_CHECK'],
+                'WADAH_PENAMPUNG_NOTE' => $data['WADAH_PENAMPUNG_NOTE'] ?? null,
+                'WHEEL_CHOCK_CHECK' => $data['WHEEL_CHOCK_CHECK'],
+                'WHEEL_CHOCK_NOTE' => $data['WHEEL_CHOCK_NOTE'] ?? null,
+                'RADIO_KOMUNIKASI_CHECK' => $data['RADIO_KOMUNIKASI_CHECK'],
+                'RADIO_KOMUNIKASI_NOTE' => $data['RADIO_KOMUNIKASI_NOTE'] ?? null,
+                'APD_STANDAR_CHECK' => $data['APD_STANDAR_CHECK'],
+                'APD_STANDAR_NOTE' => $data['APD_STANDAR_NOTE'] ?? null,
+                'ADDITIONAL_NOTES' => $data['ADDITIONAL_NOTES'] ?? null,
+                'DIKETAHUI' => $data['DIKETAHUI'] ?? null,
+                'PENGAWAS' => Auth::user()->nik,
+                'VERIFIED_DATETIME_PENGAWAS' => Carbon::now(),
+                'VERIFIED_PENGAWAS' => Auth::user()->nik,
+            ];
+
+            // if (Auth::user()->role == 'JUNIOR FOREMAN' || Auth::user()->role == 'FOREMAN' || Auth::user()->role == 'JUNIOR STAFF' || Auth::user()->role == 'STAFF' || Auth::user()->role == 'SUPERVISOR') {
+            //     $dataToInsert['PENGAWAS'] = Auth::user()->nik;
+            //     $dataToInsert['VERIFIED_DATETIME_PENGAWAS'] = Carbon::now();
+            //     $dataToInsert['VERIFIED_PENGAWAS'] = Auth::user()->nik;
+            // }
+
+            KLKHFuelStation::where('ID', $id)->update($dataToUpdate);
+
+            Activity::create([
+                'STATUSENABLED' => true,
+                'TANGGAL' => Carbon::now(),
+                'JENIS' => 'KLKH',
+                'NAMA' => Auth::user()->name,
+                'NIK' => Auth::user()->nik,
+                'KETERANGAN' => 'Telah mengupdate KLKH Fuel Station',
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'KLKH Fuel Station berhasil diupdate',
+            ], 201);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal mengupdate KLKH Fuel Station',
                 'error' => $th->getMessage(),
             ], 500);
         }
