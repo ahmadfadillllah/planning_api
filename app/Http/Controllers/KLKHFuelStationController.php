@@ -255,42 +255,55 @@ class KLKHFuelStationController extends Controller
 
     public function destroy($id)
     {
-        try {
-            $deleted = KLKHFuelStation::where('ID', $id)->update([
-                'STATUSENABLED' => false,
-                'DELETED_BY' => Auth::user()->nik,
-            ]);
-
-
-            if ($deleted) {
-
-                Activity::create([
-                    'STATUSENABLED' => true,
-                    'TANGGAL' => Carbon::now(),
-                    'JENIS' => 'KLKH',
-                    'NAMA' => Auth::user()->name,
-                    'NIK' => Auth::user()->nik,
-                    'KETERANGAN' => 'Telah menghapus KLKH Fuel Station',
+        $klkh = KLKHFuelStation::where('ID', $id)->first();
+        if(in_array(Auth::user()->role, ['STAFF', 'PJS. SUPERINTENDENT', 'SUPERINTENDENT'])){
+            try {
+                $deleted = KLKHFuelStation::where('ID', $id)->update([
+                    'STATUSENABLED' => false,
+                    'DELETED_BY' => Auth::user()->nik,
                 ]);
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'KLKH Fuel Station berhasil dihapus',
-                ], 200);
-            } else {
+
+                if ($deleted) {
+
+                    Activity::create([
+                        'STATUSENABLED' => true,
+                        'TANGGAL' => Carbon::now(),
+                        'JENIS' => 'KLKH',
+                        'NAMA' => Auth::user()->name,
+                        'NIK' => Auth::user()->nik,
+                        'KETERANGAN' => 'Telah menghapus KLKH Fuel Station',
+                    ]);
+
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'KLKH Fuel Station berhasil dihapus',
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Data tidak ditemukan atau gagal dihapus.',
+                    ], 404);
+                }
+
+            } catch (\Throwable $th) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Data tidak ditemukan atau gagal dihapus.',
-                ], 404);
+                    'message' => 'Terjadi kesalahan saat menghapus data.',
+                    'error' => $th->getMessage(),
+                ], 500);
             }
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Terjadi kesalahan saat menghapus data.',
-                'error' => $th->getMessage(),
-            ], 500);
+        } else {
+            if($klkh->PIC != Auth::user()->nik || $klkh->VERIFIED_DIKETAHUI != null){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'KLKH tidak dapat dihapus',
+                    'error' => 'KLKH tidak dapat dihapus',
+                ], 500);
+            }
         }
+
+
     }
 
     public function download($id)
