@@ -65,11 +65,15 @@ class KLKHFuelStationController extends Controller
                 ->whereBetween(DB::raw('CONVERT(varchar, fs.DATE, 23)'), [$startDate, $endDate]);
 
             // 🔐 Filter berdasarkan role user login
-            $fuelStation->where(function ($query) use ($nik) {
-                $query->where('fs.PIC', $nik)
-                    ->orWhere('fs.PENGAWAS', $nik)
-                    ->orWhere('fs.DIKETAHUI', $nik);
-            });
+            // $fuelStation->where(function ($query) use ($nik) {
+            //     $query->where('fs.PIC', $nik)
+            //         ->orWhere('fs.PENGAWAS', $nik)
+            //         ->orWhere('fs.DIKETAHUI', $nik);
+            // });
+
+            if (in_array(Auth::user()->role, ['FUELMAN', 'OPERATOR'])) {
+                $fuelStation->whereRaw('1 = 0');
+            }
             $fuelStation->orderBy('fs.CREATED_AT', 'desc');
 
             $result = $fuelStation->get();
@@ -257,7 +261,18 @@ class KLKHFuelStationController extends Controller
                 'DELETED_BY' => Auth::user()->nik,
             ]);
 
+
             if ($deleted) {
+
+                Activity::create([
+                    'STATUSENABLED' => true,
+                    'TANGGAL' => Carbon::now(),
+                    'JENIS' => 'KLKH',
+                    'NAMA' => Auth::user()->name,
+                    'NIK' => Auth::user()->nik,
+                    'KETERANGAN' => 'Telah menghapus KLKH Fuel Station',
+                ]);
+
                 return response()->json([
                     'status' => 'success',
                     'message' => 'KLKH Fuel Station berhasil dihapus',

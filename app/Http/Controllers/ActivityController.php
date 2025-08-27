@@ -23,7 +23,7 @@ class ActivityController extends Controller
                 'KETERANGAN',
             )
             ->where('STATUSENABLED', true)
-            ->where('NIK', Auth::user()->nik)
+            // ->where('NIK', Auth::user()->nik)
             ->orderByDesc('TANGGAL')
             ->limit(5)
             ->get();
