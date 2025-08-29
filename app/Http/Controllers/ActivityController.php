@@ -13,6 +13,7 @@ class ActivityController extends Controller
     public function summary()
     {
         try {
+
             $result = Activity::select(
                 'ID',
                 'STATUSENABLED',
@@ -23,7 +24,7 @@ class ActivityController extends Controller
                 'KETERANGAN',
             )
             ->where('STATUSENABLED', true)
-            // ->where('NIK', Auth::user()->nik)
+            ->where('NIK', Auth::user()->nik)
             ->orderByDesc('TANGGAL')
             ->limit(5)
             ->get();
