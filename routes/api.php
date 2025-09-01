@@ -5,6 +5,7 @@ use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\FCMTokenController;
 use App\Http\Controllers\KLKHFuelStationController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\UserDiketahuiController;
@@ -46,7 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/absensi', [AbsensiController::class, 'index']);
 
 
-
+    Route::put('/fcm-token', [FCMTokenController::class, 'store']);
     //Activity
     Route::get('/activity/summary', [ActivityController::class, 'summary']);
     Route::get('/activity/all', [ActivityController::class, 'all']);
