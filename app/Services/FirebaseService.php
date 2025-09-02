@@ -33,16 +33,28 @@ class FirebaseService
 
         $accessToken = $this->getAccessToken();
 
-        $response = Http::withToken($accessToken)->post($url, [
-            "message" => [
-                "token" => $deviceToken,
-                "notification" => [
-                    "title" => $title,
-                    "body"  => $body,
-                ],
-            ]
-        ]);
+        try {
+            $response = Http::withToken($accessToken)
+                ->acceptJson()
+                ->withOptions([
+                    'verify' => false, // pastikan SSL dicek (kalau sudah set cacert.pem)
+                ])
+                ->post($url, [
+                    "message" => [
+                        "token" => $deviceToken,
+                        "notification" => [
+                            "title" => $title,
+                            "body"  => $body,
+                        ],
+                    ]
+                ]);
 
-        return $response->json();
+            return $response->json();
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'message' => $e->getMessage(),
+            ];
+        }
     }
 }
