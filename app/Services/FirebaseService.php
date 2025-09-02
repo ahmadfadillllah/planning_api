@@ -43,6 +43,6 @@ class FirebaseService
             ]
         ]);
 
-        return $response->json();
+        // return $response->json();
     }
 }
