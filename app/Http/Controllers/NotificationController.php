@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Google\Client;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,9 @@ class NotificationController extends Controller
     //
     public function sendNotification(Request $request, FirebaseService $firebase)
     {
-        $deviceToken = $request->fcm_token;
+
+        $user = User::where('id', $request->id_user)->first();
+        $deviceToken = $user->fcm_token;
         $title = $request->title;
         $body  = $request->body;
 
