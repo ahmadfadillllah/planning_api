@@ -12,7 +12,7 @@ class FirebaseService
 
     public function __construct()
     {
-        $serviceAccountPath = storage_path('planner-app-140d2-firebase-adminsdk-fbsvc-b4111a1275.json');
+        $serviceAccountPath = public_path('storage/planner-app-140d2-firebase-adminsdk-fbsvc-b4111a1275.json');
 
         $this->client = new Client();
         $this->client->setAuthConfig($serviceAccountPath);

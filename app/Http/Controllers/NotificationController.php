@@ -30,7 +30,7 @@ class NotificationController extends Controller
         $topic = $request->input('topic', 'all'); // bisa topic atau segment
 
         // Lokasi file service account JSON
-        $serviceAccountPath = storage_path('planner-app-140d2-firebase-adminsdk-fbsvc-b4111a1275.json');
+        $serviceAccountPath = public_path('storage/planner-app-140d2-firebase-adminsdk-fbsvc-b4111a1275.json');
 
         // Auth client
         $client = new Client();
