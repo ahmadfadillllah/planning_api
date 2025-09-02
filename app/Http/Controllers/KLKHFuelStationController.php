@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\KLKHFuelStation;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
 use Illuminate\Support\Facades\File;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Services\FirebaseService;
 
 class KLKHFuelStationController extends Controller
 {
@@ -214,7 +216,7 @@ class KLKHFuelStationController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(Request $request, FirebaseService $firebase)
     {
         try {
             $data = $request->all();
@@ -300,6 +302,13 @@ class KLKHFuelStationController extends Controller
                 'NIK' => Auth::user()->nik,
                 'KETERANGAN' => 'Telah menambahkan KLKH Fuel Station',
             ]);
+
+            $userNotif = User::where('nik', $data['DIKETAHUI'])->first();
+            $deviceToken = $userNotif->fcm_token;
+            $title = Auth::user()->name;
+            $body  = 'KLKH telah berhasil dibuat, mohon untuk diperiksa...';
+
+            $firebase->sendNotification($deviceToken, $title, $body);
 
             return response()->json([
                 'status' => 'success',
@@ -574,7 +583,7 @@ class KLKHFuelStationController extends Controller
 
     }
 
-    public function verifiedDiketahui(Request $request, $id)
+    public function verifiedDiketahui(Request $request, $id, FirebaseService $firebase)
     {
 
         $klkh =  KLKHFuelStation::where('ID', $id)->first();
@@ -593,6 +602,14 @@ class KLKHFuelStationController extends Controller
                 'NIK' => Auth::user()->nik,
                 'KETERANGAN' => 'Telah memverifikasi KLKH Fuel Station',
             ]);
+
+            $userPengawas = User::where('nik', $klkh->PENGAWAS)->first();
+            $userDiketahui = User::where('nik', $klkh->DIKETAHUI)->first();
+            $deviceToken = $userPengawas->fcm_token;
+            $title = Auth::user()->name;
+            $body  = 'KLKH anda telah berhasil diverikasi, mohon untuk diperiksa...';
+
+            $firebase->sendNotification($deviceToken, $title, $body);
 
             return response()->json([
                     'status' => 'success',
