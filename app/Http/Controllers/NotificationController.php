@@ -17,19 +17,26 @@ class NotificationController extends Controller
     public function index()
     {
         try {
+            $user = Auth::user()->nik;
+
             $result = Notification::select(
-                'ID',
-                'STATUSENABLED',
-                'FROM',
-                'TO',
-                'EXPIRED',
-                'TITLE',
-                'BODY',
-                'READ',
-                'CREATED_BY',
-            )
-            ->where('STATUSENABLED', true)
-            ->get();
+                    'ID',
+                    'STATUSENABLED',
+                    'FROM',
+                    'TO',
+                    'EXPIRED',
+                    'TITLE',
+                    'BODY',
+                    'READ',
+                    'CREATED_BY',
+                )
+                ->where('STATUSENABLED', true)
+                ->where(function($q) use ($user) {
+                    $q->where('TO', 'ALL')
+                    ->orWhere('TO', $user);
+                })
+                ->where('EXPIRED', '>', now())
+                ->get();
 
             return response()->json([
                 'status' => 'success',
@@ -40,6 +47,34 @@ class NotificationController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal mengambil data notification.',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    public function readNotification(Request $request, $id)
+    {
+        try {
+            $data = $request->all();
+
+            $notif = Notification::where('ID', $id)->first();
+
+            $dataToUpdate = [
+                'READ' => true,
+            ];
+
+            Notification::where('ID', $notif->id)->update($dataToUpdate);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Success perbarui data',
+            ], 201);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal perbarui datas',
                 'error' => $th->getMessage(),
             ], 500);
         }

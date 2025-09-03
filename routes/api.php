@@ -21,8 +21,7 @@ Route::get('/banner', [BannerController::class, 'index']);
 //Area
 Route::get('/area', [AreaController::class, 'index']);
 
-//Notification
-Route::get('/notification', [NotificationController::class, 'index']);
+
 
 //Shift
 Route::get('/shift', [ShiftController::class, 'index']);
@@ -52,8 +51,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('/fcm-token', [FCMTokenController::class, 'store']);
 
+    //Notification
     Route::post('/send-notification', [NotificationController::class, 'sendNotification']);
     Route::post('/send-campaign', [NotificationController::class, 'sendCampaign']);
+    Route::get('/notification', [NotificationController::class, 'index']);
+    Route::put('/read-notification/{id}', [NotificationController::class, 'readNotification']);
 
     //Activity
     Route::get('/activity/summary', [ActivityController::class, 'summary']);
