@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Google\Client;
@@ -13,6 +14,37 @@ use App\Services\FirebaseService;
 class NotificationController extends Controller
 {
     //
+    public function index()
+    {
+        try {
+            $result = Notification::select(
+                'ID',
+                'STATUSENABLED',
+                'FROM',
+                'TO',
+                'EXPIRED',
+                'TITLE',
+                'BODY',
+                'READ',
+                'CREATED_BY',
+            )
+            ->where('STATUSENABLED', true)
+            ->get();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $result,
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal mengambil data notification.',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
     public function sendNotification(Request $request, FirebaseService $firebase)
     {
 

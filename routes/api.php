@@ -21,6 +21,9 @@ Route::get('/banner', [BannerController::class, 'index']);
 //Area
 Route::get('/area', [AreaController::class, 'index']);
 
+//Notification
+Route::get('/notification', [NotificationController::class, 'index']);
+
 //Shift
 Route::get('/shift', [ShiftController::class, 'index']);
 
