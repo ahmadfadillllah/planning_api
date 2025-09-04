@@ -56,15 +56,9 @@ class NotificationController extends Controller
     public function readNotification(Request $request, $id)
     {
         try {
-            $data = $request->all();
-
-            $notif = Notification::where('ID', $id)->first();
-
-            $dataToUpdate = [
-                'READ' => true,
-            ];
-
-            Notification::where('ID', $notif->id)->update($dataToUpdate);
+            Notification::where('ID', $id)->update([
+                'READ' => 1
+            ]);
 
             return response()->json([
                 'status' => 'success',
