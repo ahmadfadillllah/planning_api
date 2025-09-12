@@ -566,6 +566,7 @@ class KLKHFuelStationController extends Controller
                 'VERIFIED_PENGAWAS' => (string)Auth::user()->nik,
                 'VERIFIED_DATETIME_PENGAWAS' => Carbon::now(),
                 'UPDATED_BY' => Auth::user()->id,
+                'CATATAN_VERIFIED_PENGAWAS' => 'CATATAN_VERIFIED_PENGAWAS',
             ]);
 
             return response()->json([
@@ -592,6 +593,7 @@ class KLKHFuelStationController extends Controller
                 'VERIFIED_DIKETAHUI' => (string)Auth::user()->nik,
                 'VERIFIED_DATETIME_DIKETAHUI' => Carbon::now(),
                 'UPDATED_BY' => Auth::user()->id,
+                'CATATAN_VERIFIED_DIKETAHUI' => 'CATATAN_VERIFIED_DIKETAHUI',
             ]);
 
             Activity::create([
