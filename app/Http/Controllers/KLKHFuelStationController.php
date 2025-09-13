@@ -110,6 +110,12 @@ class KLKHFuelStationController extends Controller
                     'us1.name as NAMA_PIC',
                     'us2.name as NAMA_PENGAWAS',
                     'us3.name as NAMA_DIKETAHUI',
+                    DB::raw("CASE
+                    WHEN fs.DIKETAHUI = '".Auth::user()->nik."'
+                         AND fs.VERIFIED_DIKETAHUI IS NULL
+                    THEN 1
+                    ELSE 0
+                 END as check_verified")
                 )
                 ->where('fs.statusenabled', true)
                 ->where('fs.id', $id)
