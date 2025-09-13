@@ -15,7 +15,13 @@ class KKHController extends Controller
         try {
             // Ambil parameter filter dari request
             $startDate = $request->input('startDate');
-            $endDate   = $request->input('endDate');
+            $endDate = $request->input('endDate');
+
+            if (!$startDate || !$endDate) {
+                // Default ke hari ini jika tidak ada input
+                $startDate = Carbon::now()->toDateString();
+                $endDate = $startDate;
+            }
             $shift     = $request->input('shift');   // "Pagi", "Malam", atau null
             $name      = $request->input('name');    // Nik tertentu atau "Semua"
 
