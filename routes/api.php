@@ -6,6 +6,7 @@ use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\FCMTokenController;
+use App\Http\Controllers\KKHController;
 use App\Http\Controllers\KLKHFuelStationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ShiftController;
@@ -42,6 +43,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/klkh/fuel-station/verified/all/{id}', [KLKHFuelStationController::class, 'verifiedAll']);
     Route::get('/klkh/fuel-station/verified/pengawas/{id}', [KLKHFuelStationController::class, 'verifiedPengawas']);
     Route::get('/klkh/fuel-station/verified/diketahui/{id}', [KLKHFuelStationController::class, 'verifiedDiketahui']);
+
+    Route::get('/kkh', [KKHController::class, 'index']);
+    Route::get('/kkh/name', [KKHController::class, 'name']);
+    Route::put('/kkh/verifikasi', [KKHController::class, 'verifikasi']);
 
     //User Diketahui
     Route::get('/users/diketahui', [UserDiketahuiController::class, 'index']);
